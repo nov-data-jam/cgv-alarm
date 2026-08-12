@@ -3,7 +3,7 @@ name: CGV 예매 알리미
 on:
   schedule:
     # 5분마다 실행 (실제로는 몇 분 밀릴 수 있음 — GitHub 사정)
-    - cron: "*/5 * * * *"
+    - cron: "*/3 * * * *"
   workflow_dispatch:   # 손으로 직접 실행할 수 있는 버튼도 만들어줌
 
 # seen.json을 저장소에 다시 커밋하려면 쓰기 권한이 필요

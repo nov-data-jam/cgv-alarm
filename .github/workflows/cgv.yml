@@ -1,0 +1,41 @@
+name: CGV 예매 알리미
+
+on:
+  schedule:
+    # 5분마다 실행 (실제로는 몇 분 밀릴 수 있음 — GitHub 사정)
+    - cron: "*/5 * * * *"
+  workflow_dispatch:   # 손으로 직접 실행할 수 있는 버튼도 만들어줌
+
+# seen.json을 저장소에 다시 커밋하려면 쓰기 권한이 필요
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 준비
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 필요한 부품 설치
+        run: pip install requests
+
+      - name: 알리미 실행
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PW:  ${{ secrets.GMAIL_APP_PW }}
+          TO_ADDRESS:    ${{ secrets.TO_ADDRESS }}
+        run: python cgv_alarm.py
+
+      - name: 상태 저장(seen.json 커밋)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add seen.json || true
+          git commit -m "update seen state" || echo "변경 없음"
+          git push || echo "push 생략"

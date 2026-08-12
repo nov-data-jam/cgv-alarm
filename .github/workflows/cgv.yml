@@ -39,3 +39,4 @@ jobs:
           git add seen.json || true
           git commit -m "update seen state" || echo "변경 없음"
           git push || echo "push 생략"
+
